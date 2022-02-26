@@ -20,5 +20,9 @@ func Setup(r *gin.Engine) {
 	r.GET("/club/:id", deleteClub)
 	r.GET("/club/:id/members", getMembers)
 	r.GET("/club/:id/events", getEvents)
+
+	//Event
+	r.POST("/event", createEvent)
+	r.DELETE("/event/:id", deleteEvent)
 	r.GET("/", output204)
 }
