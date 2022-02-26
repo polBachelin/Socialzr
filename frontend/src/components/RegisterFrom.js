@@ -1,17 +1,17 @@
 import React, {useState} from 'react'
 
-function LoginForm({Login, error}) {
+function RegisterForm({Register, error}) {
 	const [details, setDetails] = useState({email: "", password: ""})
 
 	const submitHandler  = e => {
 		e.preventDefault();
-		Login(details)
+		Register(details)
 	}
 
 	return (
 		<form onSubmit={submitHandler}>
 			<div className="form-inner">
-				<h2>Login</h2>
+				<h2>Register</h2>
 				{(error != "") ? (<div className="error">{error}</div>) : ""}
 				<div className="form-group">
 					<label htmlFor="email">Email:</label>
@@ -21,10 +21,10 @@ function LoginForm({Login, error}) {
 					<label htmlFor="password">Password: </label>
 					<input type="password" name="password " id="password" onChange={e => setDetails({...details, password: e.target.value})} value={details.password}/>
 				</div>
-				<input type="submit" value="LOGIN"/>
+				<input type="submit" value="REGISTER"/>
 			</div>
 		</form>	
 	)
 }
 
-export default LoginForm
+export default RegisterForm
