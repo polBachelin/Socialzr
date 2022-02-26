@@ -23,4 +23,6 @@ $(NAME):
 	$(GO) build $(GOFLAGS) -o $(NAME) $(SRC)
 
 fclean:
-	rm -f  $(NAME)
+	rm -f ./$(NAME)
+
+re:	fclean all

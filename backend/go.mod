@@ -2,7 +2,7 @@ module socialzr/backend
 
 go 1.17
 
-require go.mongodb.org/mongo-driver v1.8.0 // indirect
+require go.mongodb.org/mongo-driver v1.8.0
 
 require github.com/gin-contrib/cors v1.3.1 // indirect
 

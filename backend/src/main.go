@@ -2,6 +2,8 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+
+	"socialzr/backend/src/api"
 )
 
 func CORS() gin.HandlerFunc {
@@ -22,5 +24,6 @@ func CORS() gin.HandlerFunc {
 func main() {
 	r := gin.Default()
 	r.Use(CORS())
+	api.Setup(r)
 	r.Run()
 }
