@@ -24,5 +24,8 @@ func Setup(r *gin.Engine) {
 	//Event
 	r.POST("/event", createEvent)
 	r.DELETE("/event/:id", deleteEvent)
+	r.PUT("/event/:id", updateEvent)
+	r.POST("/event/:id/subscribe", subscribeToEvent)
+	r.POST("/event/:id/unsubscribe", unubscribeToEvent)
 	r.GET("/", output204)
 }

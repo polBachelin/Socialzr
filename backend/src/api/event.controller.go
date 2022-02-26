@@ -82,3 +82,20 @@ func unubscribeToEvent(c *gin.Context) {
 	}
 	svc.UnsubscribeToEvent(objID, eventObjID)
 }
+
+func updateEvent(c *gin.Context) {
+	var event models.Event
+	eventId := c.Param("id")
+	err := c.BindJSON(&event)
+	if err != nil {
+		c.JSON(400, "")
+		fmt.Println("[ALED] /event/:id: ", err)
+	}
+	eventObjID, err := primitive.ObjectIDFromHex(eventId)
+	if err != nil {
+		c.JSON(500, "")
+		return
+	}
+	svc := service.NewEventService()
+	svc.UpdateEvent(event, eventObjID)
+}
