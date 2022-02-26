@@ -12,6 +12,7 @@ import (
 var dbHost = getSpecify("DB_HOST", "0.0.0.0")
 var dbPort = getSpecify("DB_PORT", "27017")
 var uri = "mongodb://" + os.Getenv("DB_USERNAME") + ":" + os.Getenv("DB_PASSWORD") + "@" + dbHost + ":" + dbPort
+var client *mongo.Client = nil
 
 func getSpecify(vars string, defaultVal string) string {
 	tmp := os.Getenv(vars)
@@ -23,6 +24,9 @@ func getSpecify(vars string, defaultVal string) string {
 }
 
 func GetDatabaseConnection() *mongo.Client {
+	if client != nil {
+		return client
+	}
 	clientOptions := options.Client().ApplyURI(uri)
 
 	client, err := mongo.Connect(context.TODO(), clientOptions)
