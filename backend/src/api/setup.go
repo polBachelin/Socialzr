@@ -7,11 +7,18 @@ func output204(c *gin.Context) {
 }
 
 func Setup(r *gin.Engine) {
+	//User
 	r.POST("/user", getUser)
 	r.POST("/user/login", getUserLogin)
 	r.PUT("/user/register", createUserLogin)
 	r.PUT("/user", putUser)
 	r.DELETE("/user", deleteUser)
 
+	//Club
+	r.GET("/club", getClub)
+	r.POST("/club", createClub)
+	r.GET("/club/:id", deleteClub)
+	r.GET("/club/:id/members", getMembers)
+	r.GET("/club/:id/events", getEvents)
 	r.GET("/", output204)
 }

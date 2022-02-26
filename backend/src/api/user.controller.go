@@ -90,7 +90,7 @@ func deleteUser(c *gin.Context) {
 	c.JSON(200, res)
 }
 
-func isValidateNewUser(user models.User) (bool, string) {
+func isValidateNewUser(user models.User, svc *service.UserService) (bool, string) {
 	lenPass := len([]rune(user.Password))
 	if lenPass < 10 || lenPass > 64 {
 		return false, "Error password length 10 -> 64"
@@ -101,6 +101,10 @@ func isValidateNewUser(user models.User) (bool, string) {
 	}
 	if !match {
 		return false, "Error email must be an email -> " + user.Email
+	}
+	var _, getByNameErr = svc.GetByName((user.Email))
+	if getByNameErr == nil {
+		return false, "Error email already exists -> " + user.Email
 	}
 	return true, "Ok"
 }
@@ -114,9 +118,9 @@ func createUserLogin(c *gin.Context) {
 		c.JSON(400, "")
 		return
 	}
-	ok, err := isValidateNewUser(user)
+	svc := service.NewUserService()
+	ok, err := isValidateNewUser(user, svc)
 	if ok {
-		svc := service.NewUserService()
 		user.Password = hashPassword(user.Password)
 		res, err := svc.Create(user)
 		if err != nil {

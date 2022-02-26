@@ -28,7 +28,7 @@ func (u UserService) GetByName(email string) (models.User, error) {
 	cursor := u.collection.FindOne(context.TODO(), bson.M{"email": email})
 	err := cursor.Decode(&result)
 	if err != nil {
-		return models.User{primitive.ObjectID{0}, "", ""}, err
+		return models.User{ID: primitive.ObjectID{0}, Email: "", Password: ""}, err
 	}
 	return result, nil
 }
@@ -39,7 +39,7 @@ func (u UserService) Get(id primitive.ObjectID) (models.User, error) {
 	cursor := u.collection.FindOne(context.TODO(), bson.M{"_id": id})
 	err := cursor.Decode(&result)
 	if err != nil {
-		return models.User{primitive.ObjectID{0}, "", ""}, err
+		return models.User{ID: primitive.ObjectID{0}, Email: "", Password: ""}, err
 	}
 	return result, nil
 }
