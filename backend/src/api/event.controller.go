@@ -40,3 +40,45 @@ func deleteEvent(c *gin.Context) {
 	}
 	c.JSON(200, res)
 }
+
+type IDRequestBody struct {
+	userID string
+}
+
+func getUserID(c *gin.Context) primitive.ObjectID {
+	var userID IDRequestBody
+
+	err := c.BindJSON(&userID)
+	if err != nil {
+		panic(err)
+	}
+
+	objID, err := primitive.ObjectIDFromHex(userID.userID)
+	if err != nil {
+		panic(err)
+	}
+	return objID
+}
+
+func subscribeToEvent(c *gin.Context) {
+	objID := getUserID(c)
+	eventid := c.Param("id")
+	svc := service.NewEventService()
+	eventObjID, err := primitive.ObjectIDFromHex(eventid)
+	if err != nil {
+		panic(err)
+	}
+	svc.SubscribeToEvent(objID, eventObjID)
+
+}
+
+func unubscribeToEvent(c *gin.Context) {
+	objID := getUserID(c)
+	eventid := c.Param("id")
+	svc := service.NewEventService()
+	eventObjID, err := primitive.ObjectIDFromHex(eventid)
+	if err != nil {
+		panic(err)
+	}
+	svc.UnsubscribeToEvent(objID, eventObjID)
+}

@@ -24,6 +24,16 @@ func (e Service) CreateEvent(obj models.Event) (interface{}, error) {
 	return res.InsertedID, err
 }
 
+func (e Service) UpdateEvent(obj models.Event, id primitive.ObjectID) {
+	event, err := e.GetAnEvent(id)
+	if err != nil {
+		return
+	}
+	event.Descritpion = obj.Descritpion
+	event.Title = obj.Title
+	event.Date = obj.Date
+}
+
 func (e Service) DeleteEvent(id primitive.ObjectID) (interface{}, error) {
 	res, err := e.collection.DeleteOne(context.TODO(), bson.M{"_id": id})
 	return res.DeletedCount, err
