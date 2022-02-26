@@ -26,7 +26,7 @@ func getUser(c *gin.Context) {
 		c.JSON(400, "")
 		return
 	}
-	user, err = svc.Get(user.ID)
+	user, err = svc.GetUser(user.ID)
 	if err != nil {
 		c.JSON(500, "")
 		return
@@ -44,7 +44,7 @@ func getUserLogin(c *gin.Context) {
 		c.JSON(400, "")
 		return
 	}
-	dbuser, err = svc.GetByName(user.Email)
+	dbuser, err = svc.GetUserByName(user.Email)
 	if err != nil {
 		c.JSON(500, "")
 		return
@@ -66,7 +66,7 @@ func putUser(c *gin.Context) {
 		return
 	}
 	user.Password = hashPassword(user.Password)
-	res, err := svc.Create(user)
+	res, err := svc.CreateUser(user)
 	if err != nil {
 		c.JSON(500, "")
 		return
@@ -82,7 +82,7 @@ func deleteUser(c *gin.Context) {
 		fmt.Println("[ALED]: DELETE:/user: ", err)
 		c.JSON(400, "")
 	}
-	res, err := svc.Delete(user.ID)
+	res, err := svc.DeleteUser(user.ID)
 	if err != nil {
 		c.JSON(500, "")
 		return
@@ -90,7 +90,7 @@ func deleteUser(c *gin.Context) {
 	c.JSON(200, res)
 }
 
-func isValidateNewUser(user models.User, svc *service.UserService) (bool, string) {
+func isValidateNewUser(user models.User, svc *service.Service) (bool, string) {
 	lenPass := len([]rune(user.Password))
 	if lenPass < 10 || lenPass > 64 {
 		return false, "Error password length 10 -> 64"
@@ -102,7 +102,7 @@ func isValidateNewUser(user models.User, svc *service.UserService) (bool, string
 	if !match {
 		return false, "Error email must be an email -> " + user.Email
 	}
-	var _, getByNameErr = svc.GetByName((user.Email))
+	var _, getByNameErr = svc.GetUserByName((user.Email))
 	if getByNameErr == nil {
 		return false, "Error email already exists -> " + user.Email
 	}
@@ -122,7 +122,7 @@ func createUserLogin(c *gin.Context) {
 	ok, err := isValidateNewUser(user, svc)
 	if ok {
 		user.Password = hashPassword(user.Password)
-		res, err := svc.Create(user)
+		res, err := svc.CreateUser(user)
 		if err != nil {
 			c.JSON(500, "")
 			return

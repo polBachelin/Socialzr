@@ -7,22 +7,16 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
-type UserService struct {
-	client     *mongo.Client
-	collection *mongo.Collection
-}
-
-func NewUserService() *UserService {
-	u := &UserService{}
+func NewUserService() *Service {
+	u := &Service{}
 	u.client = database.GetDatabaseConnection()
 	u.collection = u.client.Database("users").Collection("user_data")
 	return u
 }
 
-func (u UserService) GetByName(email string) (models.User, error) {
+func (u Service) GetUserByName(email string) (models.User, error) {
 	var result models.User
 
 	cursor := u.collection.FindOne(context.TODO(), bson.M{"email": email})
@@ -33,7 +27,7 @@ func (u UserService) GetByName(email string) (models.User, error) {
 	return result, nil
 }
 
-func (u UserService) Get(id primitive.ObjectID) (models.User, error) {
+func (u Service) GetUser(id primitive.ObjectID) (models.User, error) {
 	var result models.User
 
 	cursor := u.collection.FindOne(context.TODO(), bson.M{"_id": id})
@@ -44,12 +38,12 @@ func (u UserService) Get(id primitive.ObjectID) (models.User, error) {
 	return result, nil
 }
 
-func (u UserService) Delete(id primitive.ObjectID) (interface{}, error) {
+func (u Service) DeleteUser(id primitive.ObjectID) (interface{}, error) {
 	res, err := u.collection.DeleteOne(context.TODO(), bson.M{"_id": id})
 	return res.DeletedCount, err
 }
 
-func (u UserService) Create(obj models.User) (interface{}, error) {
+func (u Service) CreateUser(obj models.User) (interface{}, error) {
 	if obj.ID == primitive.NilObjectID {
 		obj.ID = primitive.NewObjectID()
 	}

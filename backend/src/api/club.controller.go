@@ -31,7 +31,7 @@ func createClub(c *gin.Context) {
 		fmt.Println("[ALED]: POST:/club: ", err)
 		c.JSON(400, "")
 	}
-	res, err := svc.Create(club)
+	res, err := svc.CreateClub(club)
 	if err != nil {
 		c.JSON(500, "")
 		return
@@ -46,7 +46,7 @@ func deleteClub(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	res, err := svc.Delete(objID)
+	res, err := svc.DeleteClub(objID)
 	if err != nil {
 		c.JSON(500, "")
 		return
