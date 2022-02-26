@@ -1,0 +1,340 @@
+openapi: 3.0.3
+info:
+  title: Socialzr
+  description: Socialzr webApp API
+  version: 1.0.0
+tags:
+- name: user
+  description: Operations about user
+- name: event
+  description: Event operations
+- name: club
+  description: Club operations
+paths:
+  /user:
+    post:
+      tags:
+      - user
+      summary: Create user
+      description: This can only be done at the registration page
+      operationId: createUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "200":
+          description: successful operation
+        "400":
+          description: Invalid email supplied
+        "413":
+          description: Invalid password
+    delete:
+      tags:
+      - user
+      summary: Delete user
+      description: This can only be done by the logged in user. Delete user from database and log him out
+      responses:
+        "200":
+          description: User has been deleted
+  /user/login:
+    get:
+      tags:
+      - user
+      summary: Logs user into the system
+      operationId: loginUser
+      parameters:
+      - name: username
+        in: query
+        description: The user name for login
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: password
+        in: query
+        description: The password for login in clear text
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: successful operation
+        "400":
+          description: Invalid username/password supplied
+      x-swagger-router-controller: User
+  /user/logout:
+    get:
+      tags:
+      - user
+      summary: Logs out current logged in user session
+      operationId: logoutUser
+      responses:
+        "200":
+          description: successful operation
+      x-swagger-router-controller: User
+      
+  /club:
+    get:
+      tags:
+      - club
+      summary: Retrieve all existing clubs
+      parameters:
+        - in: query
+          name: filter
+          schema:
+            type: string
+          description: 'specific theme for a club'
+        - in: query
+          name: limit
+          schema:
+            type: number
+          description: 'limit of results'
+        - in: query
+          name: after
+          schema:
+            type: number
+            format: base36
+          description: 'get results after a certain club'
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Club'
+    post:
+      tags:
+      - club
+      summary: create a club
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Club"
+      responses:
+        "200":
+          description: success
+  /club/{id}:
+    get:
+      tags:
+      - club
+      summary: retrieve club infromation
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: number
+        required: true
+      responses:
+        "200":
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Club'
+    delete:
+      tags:
+      - club
+      summary: delete a club
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: number
+        required: true
+      responses:
+        "200":
+          description: success
+  /club/{id}/members:
+    get:
+      tags:
+      - club
+      summary: retrieve members from a club
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: number
+        required: true
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  names:
+                    type: array
+                    items:
+                      type: string
+  /club/{id}/events:
+    get:
+      tags:
+      - club
+      summary: get events from a club
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: number
+        required: true
+      responses:
+        "200":
+          description: success
+        
+        
+  /event:
+    post:
+      tags:
+      - event
+      summary: create an event
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Event"
+      responses:
+        "200":
+          description: succcess
+        "400":
+          description: failure
+  /event/{id}:
+    put:
+      tags:
+      - event
+      summary: update an event
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: number
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Event"
+      responses:
+        "200":
+          description: succcess
+        "400":
+          description: failure
+    delete:
+      tags:
+      - event
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: number
+        required: true
+      summary: delete an event
+      responses:
+        "200":
+          description: succcess
+        "400":
+          description: failure
+  /event/{id}/subscribe:
+    post:
+      tags:
+      - event
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: number
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: number
+      summary: subscribe to an event
+      responses:
+        "200":
+          description: succcess
+        "400":
+          description: failure
+  /event/{id}/unsubscribe:
+    post:
+      tags:
+      - event
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: number
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: number
+      summary: subscribe to an event
+      responses:
+        "200":
+          description: succcess
+        "400":
+          description: failure
+  
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: number
+        email:
+          type: string
+        password:
+          type: string
+          format: password
+        clubs:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClubRef'
+    ClubRef:
+      type: object
+      properties:
+        name:
+          type: string
+    Club:
+      type: object
+      properties:
+        id:
+          type: number
+          format: base36
+        username:
+          type: string
+        description:
+          type: string
+        image:
+          type: string
+        members:
+          type: number
+    Event:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        description:
+          type: string
+        date:
+          type: string
+          format: date
+        
+        
