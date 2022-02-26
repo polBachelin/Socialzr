@@ -4,16 +4,15 @@ import LoginForm from './components/LoginForm'
 import RegisterForm from './components/RegisterFrom';
 import Modal from './Modal/Modal'
 import toggleModal from './Modal/ToggleModal';
+import SearchBar from './components/SearchBar'
 
-let logged_in = localStorage.getItem('token') ? true : false;
-let toLogin = false
-let toRegister = false
 const serverUrl = "localhost:8000"
 
 function App() {
   
-    const [user, setUser] = useState({email: "", password: ""});
+    const [user, setUser] = useState({id: "", email: "", password: ""});
     const [error, setError] = useState("");
+    const [logged, setLog] = useState(localStorage.getItem('token') ? true : false)
 
     const Register = async details => {
         await fetch(`http://${serverUrl}/user/register`, {
@@ -42,9 +41,11 @@ function App() {
             }
         })
         .then(function (data) {
-            console.log(data);
-            //setUser(data.id, data.username, data.email, data.password, []);
-            //localUser.set(getUser());
+            setUser(data.id, data.email, data.password);
+            setLog(true)
+            localStorage.setItem("token", data.id);
+            localStorage.setItem("email", data.email);
+            toggleRegistrationForm()
         })
         .catch(function (err) {
             console.error(
@@ -52,7 +53,6 @@ function App() {
                 err.message
             );
         });
-
     }
 
     const Login = async details => {
@@ -74,15 +74,15 @@ function App() {
                 return response.json();
             } else {
                 console.log("Mauvaise réponse du server");
-                // error_msg.textContent =
-                //     "Le nom d'utilisateur ou le mot de passe est incorrect";
                 return;
             }
         })
         .then(function (data) {
-            console.log(data);
-            //setUser(data.id, data.username, data.email, data.password, []);
-            //localUser.set(getUser());
+            setUser(data.id, data.email, data.password);
+            setLog(true)
+            localStorage.setItem("token", data.id);
+            localStorage.setItem("email", data.email);
+            toggleLoginForm()
         })
         .catch(function (err) {
             console.error(
@@ -93,7 +93,7 @@ function App() {
     }
 
     function Logout() {
-        logged_in = false;
+        setLog(false)
         localStorage.removeItem('token');
         localStorage.removeItem('email');
         window.location.reload(false);
@@ -110,20 +110,28 @@ function App() {
 
     return (
         <div className="App">
-            {(logged_in == false) ? (
+            {(logged === false) ? (
                 <React.Fragment>
-                    <button className="button hover" onClick={toggleLoginForm}>Login</button>
-                    <button className="button hover" onClick={toggleRegistrationForm}>Register</button>
+                    <header className='header'>                    
+                        <button className="button hover" onClick={toggleLoginForm}>Login</button>
+                        <button className="button hover" onClick={toggleRegistrationForm}>Register</button>
+                    </header>
                 </React.Fragment>
             ) : (
-                <div className="welcome">
-                <h2>Welcome</h2>
-                <button>Logout</button>
-            </div>
-        )}
-        {(toLogin == true) ? (        
-            <LoginForm Login={Login} error={error}/>
-        ) : ("")}
+                <div className="main-page">
+                    <header className='header'>
+                        <div className='header-right'>
+                            <button className="button hover">Create a club</button>
+                            <button className="button hover">Profile</button>
+                            <button className="button hover" onClick={Logout}>Logout</button>
+                        </div>
+                    </header>
+                    <SearchBar/>
+                    <div>
+                        <h2>My events</h2>
+                    </div>
+                </div>
+            )}
         <Modal
             isShowing={isRegistrationFormShowed}
             hide={toggleRegistrationForm}
@@ -137,6 +145,8 @@ function App() {
             title="Login">
             <LoginForm Login={Login} error={error}/>
         </Modal>
+        
+
 
         </div>
 

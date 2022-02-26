@@ -8,48 +8,8 @@
   padding: 20px 10px;
 }
 
-.logo {
-  background-color: #f1f1f1;
-  border: none;
-  border-radius: 4px;
-  padding: 5px;
-  text-align: center;
-  display: inline-block;
-  color: black;
-  font-size: 25px;
-  font-weight: bold;
-  border: none;
-  outline: none;
-}
-
-.prese {
-  text-align: center;
-  font-size: 30px;
-}
-
-.logo_gif {
-  text-align: center;
-}
-
-.img_gif {
-  width: 300px;
-}
-
-.img_swap {
-  width: 200px;
-}
-
-.flag {
-  width: 50px;
-}
-
-.image_flag {
-  width: 100%;
-}
-
 .button {
   background-color: #f1f1f1;
-  border: none;
   border-radius: 4px;
   text-align: center;
   display: inline-block;
@@ -71,96 +31,22 @@
   float: right;
 }
 
-.DropDownList {
-  border: none;
-  outline: none;
+ul li {
+  font-size: 20px;
 }
 
-@media screen and (max-width: 500px) {
-  .header a {
-    float: none;
-    display: block;
-    text-align: left;
-  }
-
-  .header-right {
-    float: none;
-  }
-}
-
-.carousel-item {
-  height: 65vh;
-  min-height: 350px;
-  background: no-repeat center center scroll;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-}
-
-html {
-  font-size: 10px;
-}
-
-.parallax {
-  width: 100%;
-  height: 100vh;
+.search {
   display: flex;
-  position: relative;
-  overflow: hidden;
+  align-items: center;
+  flex-direction: column;
+  width: 30%;
 }
 
-.img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: -1;
-}
-
-.text-titre {
-  text-align:start;
-}
-
-.headline {
-  font-size: 5rem;
-  font-family: 'Orbitron', sans-serif;
-  color: white;
-  font-weight: 100;
-  line-height: 0;
-}
-
-.text {
-  font-size: 5rem;
-  font-family: 'Orbitron', sans-serif;
-  color: white;
-  font-weight: 100;
-  line-height: 0;
-}
-
-/* .headline::first-letter {
-  font-size: 20rem;
-} */
-
-.overflow {
-  height: 200vh;
-}
-
-.checkmark {
-  float: left;
-  margin-left: 30%;
-  width: 10%;
-}
-
-.cross {
-  float: right;
-  margin-right: 30%;
-  width: 10%;
-}
-
-.matching_list {
-  font-size: 1.4rem;
-  justify-content: space-between;
+.box {
+  text-align: left;
+  border: black ridge 1px;
+  border-radius: 10px;
+  margin: 3px;
+  width: 20rem;
+  padding-left: 10px;
 }
