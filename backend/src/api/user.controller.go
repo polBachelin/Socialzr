@@ -9,6 +9,7 @@ import (
 	service "socialzr/backend/src/services"
 
 	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func hashPassword(pass string) string {
@@ -131,4 +132,24 @@ func createUserLogin(c *gin.Context) {
 	} else {
 		c.JSON(400, "Invalid username or password: "+err)
 	}
+}
+
+func getUserEvents(c *gin.Context) {
+	var userID IDRequestBody
+
+	err := c.BindJSON(&userID)
+	if err != nil {
+		panic(err)
+	}
+	objID, err := primitive.ObjectIDFromHex(userID.UserID)
+	if err != nil {
+		panic(err)
+	}
+	svc := service.NewUserService()
+	res, err := svc.GetUserEvents(objID)
+	if err != nil {
+		c.JSON(500, "")
+		return
+	}
+	c.JSON(200, res)
 }

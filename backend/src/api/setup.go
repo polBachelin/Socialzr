@@ -13,6 +13,7 @@ func Setup(r *gin.Engine) {
 	r.PUT("/user/register", createUserLogin)
 	r.PUT("/user", putUser)
 	r.DELETE("/user", deleteUser)
+	r.POST("/user/events", getUserEvents)
 
 	//Club
 	r.GET("/club", getClub)
@@ -20,7 +21,6 @@ func Setup(r *gin.Engine) {
 	r.GET("/club/:id", deleteClub)
 	r.GET("/club/:id/members", getMembers)
 	r.GET("/club/:id/events", getEvents)
-
 	//Event
 	r.POST("/event", createEvent)
 	r.DELETE("/event/:id", deleteEvent)

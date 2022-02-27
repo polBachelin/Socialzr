@@ -8,4 +8,5 @@ type Club struct {
 	Name        string               `form:"name" bson:"name" json:"name"`
 	Description string               `bson:"description" json:"description"`
 	Events      []primitive.ObjectID `bson:"events" json:"events"`
+	Admins      []primitive.ObjectID `bson:"admins" json:"admins"`
 }

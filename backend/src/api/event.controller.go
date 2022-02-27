@@ -42,7 +42,7 @@ func deleteEvent(c *gin.Context) {
 }
 
 type IDRequestBody struct {
-	userID string
+	UserID string `form:"userID" bson:"userID" json:"userID"`
 }
 
 func getUserID(c *gin.Context) primitive.ObjectID {
@@ -53,7 +53,7 @@ func getUserID(c *gin.Context) primitive.ObjectID {
 		panic(err)
 	}
 
-	objID, err := primitive.ObjectIDFromHex(userID.userID)
+	objID, err := primitive.ObjectIDFromHex(userID.UserID)
 	if err != nil {
 		panic(err)
 	}

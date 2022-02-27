@@ -50,3 +50,20 @@ func (u Service) CreateUser(obj models.User) (interface{}, error) {
 	res, err := u.collection.InsertOne(context.TODO(), obj)
 	return res.InsertedID, err
 }
+
+func (u Service) GetUserEvents(id primitive.ObjectID) ([]models.Event, error) {
+	var result []models.Event
+	user, err := u.GetUser(id)
+	if err != nil {
+		return nil, err
+	}
+	svc := NewEventService()
+	for i := 0; i < len(user.Events); i++ {
+		event, err := svc.GetAnEvent(user.Events[i])
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, event)
+	}
+	return result, nil
+}

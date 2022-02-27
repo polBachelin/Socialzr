@@ -52,10 +52,16 @@ func (e Service) GetAnEvent(id primitive.ObjectID) (models.Event, error) {
 
 func (e Service) SubscribeToEvent(userId primitive.ObjectID, eventId primitive.ObjectID) {
 	change := bson.M{"$push": bson.M{"participants": userId}}
+	userChange := bson.M{"$push": bson.M{"events": eventId}}
+	svc := NewUserService()
+	svc.collection.UpdateByID(context.TODO(), userId, userChange)
 	e.collection.UpdateByID(context.TODO(), eventId, change)
 }
 
 func (e Service) UnsubscribeToEvent(userId primitive.ObjectID, eventId primitive.ObjectID) {
 	change := bson.M{"$pull": bson.M{"participants": userId}}
+	userChange := bson.M{"$pull": bson.M{"events": eventId}}
+	svc := NewUserService()
+	svc.collection.UpdateByID(context.TODO(), userId, userChange)
 	e.collection.UpdateByID(context.TODO(), eventId, change)
 }

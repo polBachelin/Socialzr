@@ -11,14 +11,18 @@ import (
 
 func getClub(c *gin.Context) {
 	var clubs []models.Club
-
+	clubName := c.Query("name")
 	svc := service.NewClubService()
-	// err := c.BindJSON(&clubs)
-	// if err != nil {
-	// 	fmt.Println("[ALED]: GET:/club ", err)
-	// 	c.JSON(400, "")
-	// }
-	clubs = svc.GetAllClubs()
+	if clubName != "" {
+		club, err := svc.GetClubByName(clubName)
+		clubs = append(clubs, club)
+		if err != nil {
+			c.JSON(400, "No club found with that name")
+			return
+		}
+	} else {
+		clubs = svc.GetAllClubs()
+	}
 	c.JSON(200, clubs)
 }
 
