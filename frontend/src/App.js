@@ -5,14 +5,19 @@ import RegisterForm from './components/RegisterFrom';
 import Modal from './Modal/Modal'
 import toggleModal from './Modal/ToggleModal';
 import SearchBar from './components/SearchBar'
+import EventsList from './components/EventsList';
+import CreateClub from './components/CreateClub';
+import Popup from 'reactjs-popup';
 
-const serverUrl = "localhost:8000"
+export const serverUrl = "localhost:8000"
 
 function App() {
-  
-    const [user, setUser] = useState({id: "", email: "", password: ""});
+    const [user, setUser] = useState({id: localStorage.getItem('token'), email: "", password: ""});
     const [error, setError] = useState("");
     const [logged, setLog] = useState(localStorage.getItem('token') ? true : false)
+	const [open, setOpen] = useState(false);
+	const closeModal = () => setOpen(false);
+
 
     const Register = async details => {
         await fetch(`http://${serverUrl}/user/register`, {
@@ -73,8 +78,7 @@ function App() {
             if (response.ok) {
                 return response.json();
             } else {
-                console.log("Mauvaise réponse du server");
-                return;
+                throw 'Mauvaise réponse du serveur';
             }
         })
         .then(function (data) {
@@ -108,6 +112,11 @@ function App() {
         toggle: toggleRegistrationForm
       } = toggleModal();
 
+      const {
+          isShowing: isCreateClubShowed,
+          toggle: toggleCreateClub
+      } = toggleModal();
+
     return (
         <div className="App">
             {(logged === false) ? (
@@ -121,7 +130,8 @@ function App() {
                 <div className="main-page">
                     <header className='header'>
                         <div className='header-right'>
-                            <button className="button hover">Create a club</button>
+                            <button className="button hover" onClick={toggleCreateClub}>Create a club</button>
+                            <button className="button hover">My clubs</button>
                             <button className="button hover">Profile</button>
                             <button className="button hover" onClick={Logout}>Logout</button>
                         </div>
@@ -129,6 +139,7 @@ function App() {
                     <SearchBar/>
                     <div>
                         <h2>My events</h2>
+                        <EventsList id={user.id}/>
                     </div>
                 </div>
             )}
@@ -146,10 +157,18 @@ function App() {
             <LoginForm Login={Login} error={error}/>
         </Modal>
         
-
-
+        <Modal
+            isShowing={isCreateClubShowed}
+            hide={toggleCreateClub}
+            title="Create a club">
+            <CreateClub toggle={toggleCreateClub} id={user.id} tooltip={setOpen}/>
+        </Modal>
+        <Popup open={open} position="right center" closeOnDocumentClick onClose={closeModal}>
+            <div className='modal'>
+                <span className='popup-content'>Club created !</span>
+            </div>
+        </Popup>
         </div>
-
     );
 }
 

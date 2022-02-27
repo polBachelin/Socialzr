@@ -11,7 +11,6 @@ function RegisterForm({Register, error}) {
 	return (
 		<form onSubmit={submitHandler}>
 			<div className="form-inner">
-				<h2>Register</h2>
 				{(error !== "") ? (<div className="error">{error}</div>) : ""}
 				<div className="form-group">
 					<label htmlFor="email">Email:</label>
