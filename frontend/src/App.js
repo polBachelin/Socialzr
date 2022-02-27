@@ -8,6 +8,7 @@ import SearchBar from './components/SearchBar'
 import EventsList from './components/EventsList';
 import CreateClub from './components/CreateClub';
 import Popup from 'reactjs-popup';
+import ClubList from './components/ClubList';
 
 export const serverUrl = "localhost:8000"
 
@@ -17,6 +18,8 @@ function App() {
     const [logged, setLog] = useState(localStorage.getItem('token') ? true : false)
 	const [open, setOpen] = useState(false);
 	const closeModal = () => setOpen(false);
+    let events;
+    let clubs;
 
 
     const Register = async details => {
@@ -103,6 +106,28 @@ function App() {
         window.location.reload(false);
     }
 
+    async function getClubs() {
+        //TODO        
+    }
+
+    async function getEvents() {
+        let res = await fetch(`http://${serverUrl}/user/events`, {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type":
+                    "application/x-www-form-urlencoded; charset=UTF-8",
+                "Access-Control-Allow-Origin": `http://${serverUrl}`,
+            },
+            body: JSON.stringify({
+                userID: user.id
+            })
+        })
+	    events = await res.json();
+    }
+
+    getEvents()
+
     const {
         isShowing: isLoginFormShowed,
         toggle: toggleLoginForm
@@ -116,6 +141,12 @@ function App() {
           isShowing: isCreateClubShowed,
           toggle: toggleCreateClub
       } = toggleModal();
+
+      const {
+        isShowing: isMyClubsShowed,
+        toggle: toggleMyClubs
+    } = toggleModal();
+
 
     return (
         <div className="App">
@@ -131,7 +162,7 @@ function App() {
                     <header className='header'>
                         <div className='header-right'>
                             <button className="button hover" onClick={toggleCreateClub}>Create a club</button>
-                            <button className="button hover">My clubs</button>
+                            <button className="button hover" onClick={getClubs()}>My clubs</button>
                             <button className="button hover">Profile</button>
                             <button className="button hover" onClick={Logout}>Logout</button>
                         </div>
@@ -139,7 +170,7 @@ function App() {
                     <SearchBar/>
                     <div>
                         <h2>My events</h2>
-                        <EventsList id={user.id}/>
+                        <EventsList events={events}/>
                     </div>
                 </div>
             )}
@@ -163,6 +194,15 @@ function App() {
             title="Create a club">
             <CreateClub toggle={toggleCreateClub} id={user.id} tooltip={setOpen}/>
         </Modal>
+
+        <Modal
+            isShowing={isMyClubsShowed}
+            hide={toggleMyClubs}
+            title="Login">
+            <ClubList clubs={[]}/>
+        </Modal>
+
+
         <Popup open={open} position="right center" closeOnDocumentClick onClose={closeModal}>
             <div className='modal'>
                 <span className='popup-content'>Club created !</span>

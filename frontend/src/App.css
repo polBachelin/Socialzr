@@ -37,8 +37,28 @@ ul li {
 
 .search {
   display: flex;
+  justify-content: center;
   align-items: center;
-  flex-direction: column;
+  height: 100%;
+}
+
+.searchTerm {
+  border: 3px solid #00B4CC;
+  padding: 5px;
+  height: 20px;
+  border-radius: 3px 3px 3px 3px;
+  outline: none;
+  color: #9DBFAF;
+}
+
+.searchTerm:focus{
+  color: #00B4CC;
+}
+
+.searchResults {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .box {
